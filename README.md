@@ -1,137 +1,147 @@
+> 🇫🇷 [Lire en français](README.fr.md)
+
 # DivePilot
 
-**Pilotez votre boîtier étanche HotDive — caméra et ordinateur de plongée — depuis n'importe quel téléphone Android (7+), 100 % hors-ligne, sans compte ni login.**
+**Control your HotDive waterproof housing — camera and dive computer — from any Android phone (7+), fully offline, with no account and no login.**
 
-DivePilot est une application Android (Kotlin + Jetpack Compose) qui **pilote le boîtier étanche HotDive** en Bluetooth et en reprend les fonctions d'**ordinateur de plongée**. Elle permet de **continuer à utiliser votre boîtier HotDive**, même si l'application d'origine n'est plus disponible.
+DivePilot is an Android app (Kotlin + Jetpack Compose) that **drives the HotDive waterproof housing** over Bluetooth and reimplements its **dive computer** features. It lets you **keep using your HotDive housing**, even if the original app is no longer available.
 
-C'est une **réimplémentation** : aucun code de l'application d'origine n'est copié. Seuls les **faits d'interopérabilité** (UUID BLE et octets de commande) sont réutilisés pour pouvoir dialoguer avec le boîtier.
+It is a **reimplementation**: no code from the original app is copied. Only the **interoperability facts** (BLE UUIDs and command bytes) are reused so the app can talk to the housing.
 
 ---
 
-## Points forts
+## Download
+
+**Latest release (v0.9.0):** [dive-pilot-0.9.0.apk](https://github.com/Soleiado/Divepilot/releases/download/v0.9.0/dive-pilot-0.9.0.apk)
+
+See all versions on the [Releases page](https://github.com/Soleiado/Divepilot/releases).
+
+---
+
+## Highlights
 
 | | |
 |---|---|
-| 📱 **Tout téléphone Android 7.0+** | minSdk 24 — fonctionne sur les appareils anciens comme récents |
-| 🔌 **100 % hors-ligne** | aucune connexion internet, aucun serveur, aucune donnée envoyée |
-| 🔐 **Sans compte** | pas de login, pas d'inscription, pas de suivi |
-| 🌍 **Bilingue** | français / anglais (Réglages → Langue) |
-| 🆓 **Gratuit** | sans publicité |
+| 📱 **Any Android 7.0+ phone** | minSdk 24 — works on old and new devices alike |
+| 🔌 **Fully offline** | no internet connection, no server, no data sent |
+| 🔐 **No account** | no login, no sign-up, no tracking |
+| 🌍 **Bilingual** | French / English (Settings → Language) |
+| 🆓 **Free** | no ads |
 
 ---
 
-## Fonctionnalités
+## Features
 
-### 🔗 Connexion au boîtier (Bluetooth Low Energy)
-- Scan, appairage, connexion GATT et abonnement aux notifications.
-- Reconnexion automatique ; le téléphone ne fait que **recevoir** (aucune écriture).
+### 🔗 Housing connection (Bluetooth Low Energy)
+- Scan, pair, GATT connection and notification subscription.
+- Automatic reconnection; the phone only **receives** (no writes).
 
-### 📷 Caméra pilotée par le boîtier
-- 4 modes : **Photo**, **Autoportrait**, **Vidéo**, **Vidéo autoportrait**.
-- Les boutons du boîtier pilotent : mise au point, zoom, bascule photo/vidéo, déclencheur, menu.
-- Réglages caméra : balance des blancs, taille d'image, taille vidéo, exposition.
-- Le **flash est désactivé** (la lumière se réfléchit dans le boîtier).
+### 📷 Camera driven by the housing
+- 4 modes: **Photo**, **Selfie**, **Video**, **Video selfie**.
+- The housing buttons control: focus, zoom, photo/video toggle, shutter, menu.
+- Camera settings: white balance, image size, video size, exposure.
+- **Flash is disabled** (light reflects inside the housing).
 
-### 🤿 Ordinateur de plongée (MODE TEST)
-Désactivé par défaut — à activer dans **Réglages → « Option expérimentale »** (avec un grand avertissement).
+### 🤿 Dive computer (TEST MODE)
+Disabled by default — enable it in **Settings → "Experimental option"** (with a large disclaimer).
 
-- Décompression **Bühlmann ZHL-16C** avec **Gradient Factors 30/70**.
-- **NDL** (temps restant sans palier), **paliers de décompression** + **TTS**, plafond.
-- **Toxicité oxygène** : CNS % + OTU (nitrox, O₂ ≤ 40 %).
-- **Intervalle de surface** et **temps avant avion** (no-fly), plongées répétées.
-- **Altitude** (0 / 1000 / 2000 / 3000 m) et **eau douce / salée**.
-- **Palier de sécurité** (6 m).
+- **Bühlmann ZHL-16C** decompression with **Gradient Factors 30/70**.
+- **NDL** (remaining no-decompression time), **deco stops** + **TTS**, ceiling.
+- **Oxygen toxicity**: CNS % + OTU (nitrox, O₂ ≤ 40%).
+- **Surface interval** and **time-to-fly** (no-fly), repetitive dives.
+- **Altitude** (0 / 1000 / 2000 / 3000 m) and **fresh / salt water**.
+- **Safety stop** (6 m).
 
-> ⚠️ **Ne pas utiliser comme ordinateur de plongée réel.** Cette fonctionnalité est en **MODE TEST** : les calculs ne sont pas validés et ne remplacent ni une formation ni un ordinateur certifié.
+> ⚠️ **Do not use as a real dive computer.** This feature is in **TEST MODE**: the calculations are unvalidated and do not replace training or a certified computer.
 
-### 📖 Journal de plongée
-- Enregistre chaque plongée : **profil de profondeur**, durée, profondeur max, températures, **coordonnées GPS** (dernière position avant immersion), altitude, eau douce/salée.
-- Coordonnées GPS **cliquables** → ouverture dans Google Maps.
+### 📖 Dive logbook
+- Records every dive: **depth profile**, duration, max depth, temperatures, **GPS coordinates** (last position before immersion), altitude, fresh/salt water.
+- GPS coordinates are **clickable** → opens Google Maps.
 
-### 🧭 Écrans annexes
-- **Boussole** (capteur du téléphone).
-- **Galerie** des photos/vidéos prises.
-- **Guide d'utilisation** intégré.
-- **Correction colorimétrique** des photos sous-marines.
-- **Réglages** : unités (m/ft, °C/°F), langue, alertes, ordinateur de plongée.
-- **Service d'avant-plan** : le suivi de plongée continue en arrière-plan.
-
----
-
-## Fonctionnement (résumé)
-
-1. **Allumez le boîtier**, puis dans DivePilot touchez **« Scanner »** (ou le boîtier dans la liste des appareils appairés).
-2. L'app se connecte en **BLE** et écoute les commandes des boutons et la **télémétrie** (batterie, température, profondeur).
-3. Depuis l'écran **Caméra**, les boutons du boîtier pilotent la prise de vue ; la télémétrie de plongée s'affiche en surimpression.
-4. À plus de 1,2 m, une **plongée démarre** automatiquement (minuteur, profondeur max, palier de sécurité…) et se termine en remontant sous 0,5 m.
-5. La plongée est **enregistrée dans le journal** avec son profil, sa position GPS, etc.
+### 🧭 Other screens
+- **Compass** (phone sensor).
+- **Gallery** of photos/videos taken.
+- Built-in **user guide**.
+- **Color correction** for underwater photos.
+- **Settings**: units (m/ft, °C/°F), language, alerts, dive computer.
+- **Foreground service**: dive tracking keeps running in the background.
 
 ---
 
-## Protocole BLE (faits d'interopérabilité)
+## How it works (summary)
 
-- **Service** : `e6400001-b5a3-f393-e0a9-e50e24dcca9e`
-- **Notification/lecture** : `e6400003-b5a3-f393-e0a9-e50e24dcca9e`
-- **Écriture** : `e6400002-b5a3-f393-e0a9-e50e24dcca9e` (non utilisée)
-- **Commandes** (2 octets) : `f101` focus · `f102` boussole · `f103` photo/vidéo · `f105`/`f106` zoom avant · `f107`/`f108` menu · `f109`/`f10a` zoom arrière · `f10b` déclencheur · `f10d` flash
-- **Télémétrie** (13 octets) : batterie, température (°C), profondeur (m)
+1. **Turn on the housing**, then in DivePilot tap **"Scan"** (or the housing in the paired devices list).
+2. The app connects over **BLE** and listens to the button commands and **telemetry** (battery, temperature, depth).
+3. On the **Camera** screen, the housing buttons drive the camera; dive telemetry is overlaid on screen.
+4. Below 1.2 m a **dive starts** automatically (timer, max depth, safety stop…) and ends when ascending above 0.5 m.
+5. The dive is **saved to the logbook** with its profile, GPS position, etc.
 
 ---
 
-## Dépendances
+## BLE protocol (interoperability facts)
 
-### Outils de build
+- **Service**: `e6400001-b5a3-f393-e0a9-e50e24dcca9e`
+- **Notify/read**: `e6400003-b5a3-f393-e0a9-e50e24dcca9e`
+- **Write**: `e6400002-b5a3-f393-e0a9-e50e24dcca9e` (unused)
+- **Commands** (2 bytes): `f101` focus · `f102` compass · `f103` photo/video · `f105`/`f106` zoom in · `f107`/`f108` menu · `f109`/`f10a` zoom out · `f10b` shutter · `f10d` flash
+- **Telemetry** (13 bytes): battery, temperature (°C), depth (m)
 
-| Composant | Version |
+---
+
+## Dependencies
+
+### Build tools
+
+| Component | Version |
 |---|---|
 | Gradle | 9.7.1 |
 | Android Gradle Plugin (AGP) | 9.4.1 |
 | Kotlin | 2.4.21 |
 | compileSdk / targetSdk | 37 |
 | minSdk | 24 (Android 7.0) |
-| JDK | 17+ (build testé avec JDK 25) |
+| JDK | 17+ (build tested with JDK 25) |
 
-### Bibliothèques
+### Libraries
 
-| Bibliothèque | Version | Usage |
+| Library | Version | Purpose |
 |---|---|---|
 | Jetpack Compose (BOM) | 2026.08.00 | UI (`ui`, `ui-graphics`, `material3`, `ui-tooling-preview`) |
-| AndroidX Core KTX | 1.16.0 | extensions Kotlin |
+| AndroidX Core KTX | 1.16.0 | Kotlin extensions |
 | AndroidX Lifecycle | 2.9.1 | `runtime-ktx`, `runtime-compose`, `viewmodel-compose` |
-| AndroidX Activity Compose | 1.10.1 | intégration Compose |
-| AndroidX Navigation Compose | 2.10.2 | navigation entre écrans |
-| CameraX | 1.6.1 | caméra (`core`, `camera2`, `lifecycle`, `video`, `view`) |
-| Gson | 2.11.0 | sérialisation du journal de plongée |
-| JUnit | 4.13.2 | tests unitaires (modèle de décompression) |
+| AndroidX Activity Compose | 1.10.1 | Compose integration |
+| AndroidX Navigation Compose | 2.10.2 | screen navigation |
+| CameraX | 1.6.1 | camera (`core`, `camera2`, `lifecycle`, `video`, `view`) |
+| Gson | 2.11.0 | dive logbook serialization |
+| JUnit | 4.13.2 | unit tests (decompression model) |
 
 ---
 
-## Prérequis & Build
+## Requirements & Build
 
-- **JDK 17 ou plus**.
-- **Android SDK** avec les plateformes `android-37` (et `android-34`).
+- **JDK 17 or later**.
+- **Android SDK** with `android-37` (and `android-34`) platforms.
 
 ```powershell
-# APK de debug
+# Debug APK
 .\gradlew.bat :app:assembleDebug
 
-# APK de diffusion (signé)
+# Release (signed) APK
 .\gradlew.bat :app:assembleRelease
 ```
 
-> La signature release utilise `keystore/divepilot-release.jks` (exclu de git — à conserver précieusement pour les futures mises à jour).
+> Release signing uses `keystore/divepilot-release.jks` (git-ignored — keep it safe for future updates).
 
 ---
 
-## Licence & crédits
+## License & credits
 
-- Le **code** est sous licence **MIT** — voir [`LICENSE`](LICENSE).
-- **Icône** « scuba_diving » : Material Symbols (Google), licence **Apache 2.0**.
-- **Image de fond** : « Sea fans coral reef Pagan 2022 », NOAA (domaine public).
-- Voir [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) pour le détail.
+- The **code** is under the **MIT** license — see [`LICENSE`](LICENSE).
+- **Icon** "scuba_diving": Material Symbols (Google), **Apache 2.0** license.
+- **Background image**: "Sea fans coral reef Pagan 2022", NOAA (public domain).
+- See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for details.
 
 ---
 
-## Avertissement
+## Disclaimer
 
-L'**ordinateur de plongée** est une fonctionnalité **expérimentale, désactivée par défaut**. Ne l'utilisez **jamais** pour planifier ou réaliser une plongée réelle. DivePilot n'est pas un appareil de plongée certifié.
+The **dive computer** is an **experimental feature, disabled by default**. Never use it to plan or perform a real dive. DivePilot is not a certified dive device.
