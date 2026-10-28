@@ -12,7 +12,7 @@ C'est une **réimplémentation** : aucun code de l'application d'origine n'est c
 
 ## Téléchargement
 
-**Dernière version (v0.9.0) :** [dive-pilot-0.9.0.apk](https://github.com/Soleiado/Divepilot/releases/download/v0.9.0/dive-pilot-0.9.0.apk)
+**Dernière version (v0.9.1) :** [dive-pilot-0.9.1.apk](https://github.com/Soleiado/Divepilot/releases/download/v0.9.1/dive-pilot-0.9.1.apk)
 
 Voir toutes les versions sur la [page Releases](https://github.com/Soleiado/Divepilot/releases).
 

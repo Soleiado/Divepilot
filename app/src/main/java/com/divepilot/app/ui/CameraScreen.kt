@@ -42,7 +42,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -211,7 +213,7 @@ fun CameraScreen(onBack: () -> Unit, onOpenCompass: () -> Unit) {
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .widthIn(max = 360.dp)
-                    .padding(start = 12.dp, end = 12.dp, bottom = 120.dp),
+                    .padding(start = 12.dp, end = 12.dp, bottom = 56.dp),
             )
         }
     }
@@ -234,7 +236,7 @@ private fun CameraSettingsPanel(
         shape = RoundedCornerShape(12.dp),
         color = Color.Black.copy(alpha = 0.78f),
     ) {
-        Column(Modifier.padding(12.dp)) {
+        Column(Modifier.padding(horizontal = 12.dp, vertical = 8.dp)) {
             OptionRow(
                 stringResource(R.string.white_balance),
                 state.whiteBalanceLabel,
@@ -290,13 +292,25 @@ private fun OptionRow(
     }
     Surface(onClick = onClick, color = bg, modifier = Modifier.fillMaxWidth()) {
         Row(
-            Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+            Modifier.padding(horizontal = 12.dp, vertical = 5.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(label, color = Color.White, modifier = Modifier.weight(1f))
-            if (editing) Text("◀", color = Color(0xFF4DD0E1))
-            Text(value, color = if (editing) Color(0xFF4DD0E1) else Color.White)
-            if (editing) Text("▶", color = Color(0xFF4DD0E1))
+            Text(
+                label,
+                color = Color.White,
+                fontSize = 14.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f),
+            )
+            if (editing) Text("◀", color = Color(0xFF4DD0E1), fontSize = 14.sp)
+            Text(
+                value,
+                color = if (editing) Color(0xFF4DD0E1) else Color.White,
+                fontSize = 14.sp,
+                maxLines = 1,
+            )
+            if (editing) Text("▶", color = Color(0xFF4DD0E1), fontSize = 14.sp)
         }
     }
 }
@@ -316,16 +330,25 @@ private fun ExposureRow(
     }
     Surface(onClick = onSelect, color = bg, modifier = Modifier.fillMaxWidth()) {
         Row(
-            Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+            Modifier.padding(horizontal = 12.dp, vertical = 2.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(stringResource(R.string.exposure), color = Color.White, modifier = Modifier.weight(1f))
-            TextButton(onClick = { onExposure(-1) }) { Text("−", color = Color.White) }
+            Text(
+                stringResource(R.string.exposure),
+                color = Color.White,
+                fontSize = 14.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f),
+            )
+            TextButton(onClick = { onExposure(-1) }) { Text("−", color = Color.White, fontSize = 14.sp) }
             Text(
                 if (index == 0) stringResource(R.string.auto) else index.toString(),
                 color = if (editing) Color(0xFF4DD0E1) else Color.White,
+                fontSize = 14.sp,
+                maxLines = 1,
             )
-            TextButton(onClick = { onExposure(+1) }) { Text("+", color = Color.White) }
+            TextButton(onClick = { onExposure(+1) }) { Text("+", color = Color.White, fontSize = 14.sp) }
         }
     }
 }

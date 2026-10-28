@@ -12,7 +12,7 @@ It is a **reimplementation**: no code from the original app is copied. Only the 
 
 ## Download
 
-**Latest release (v0.9.0):** [dive-pilot-0.9.0.apk](https://github.com/Soleiado/Divepilot/releases/download/v0.9.0/dive-pilot-0.9.0.apk)
+**Latest release (v0.9.1):** [dive-pilot-0.9.1.apk](https://github.com/Soleiado/Divepilot/releases/download/v0.9.1/dive-pilot-0.9.1.apk)
 
 See all versions on the [Releases page](https://github.com/Soleiado/Divepilot/releases).
 
