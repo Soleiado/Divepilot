@@ -1,0 +1,192 @@
+<resources>
+    <string name="app_name">DivePilot</string>
+    <string name="back">‹ Retour</string>
+
+    <!-- Écran de capture BLE -->
+    <string name="capture_title">DivePilot</string>
+    <string name="scan">Scanner</string>
+    <string name="scanning">Scan en cours…</string>
+    <string name="stop">Arrêter</string>
+    <string name="disconnect">Déconnecter</string>
+    <string name="camera">Caméra</string>
+    <string name="compass">Boussole</string>
+    <string name="journal">Journal</string>
+    <string name="gallery">Galerie</string>
+    <string name="guide">Guide</string>
+    <string name="correction">Correction</string>
+    <string name="settings">Réglages</string>
+    <string name="status">Statut : %1$s</string>
+    <string name="devices">Appareils</string>
+    <string name="no_devices">Aucun appareil. Vérifiez que le boîtier est allumé ; les appareils déjà jumelés s\'affichent automatiquement.</string>
+    <string name="paired">(jumelé)</string>
+    <string name="unknown">Inconnu</string>
+    <string name="last_command">DERNIÈRE COMMANDE</string>
+    <string name="press_button">Appuyez sur un bouton du boîtier</string>
+    <string name="commands_history">Historique des commandes</string>
+    <string name="clear">Effacer</string>
+    <string name="battery">Batterie</string>
+    <string name="phone_battery">Téléphone</string>
+    <string name="box_battery">Boîtier</string>
+    <string name="temperature">Température</string>
+    <string name="depth">Profondeur</string>
+
+    <!-- Connexion -->
+    <string name="disconnected">Déconnecté</string>
+    <string name="connected_discovering">Connecté — découverte des services…</string>
+    <string name="subscribed">Abonné aux notifications</string>
+    <string name="bluetooth_unavailable">Bluetooth indisponible sur cet appareil</string>
+    <string name="scan_failed">Échec du scan (code %1$d)</string>
+    <string name="service_discovery_failed">Échec de la découverte des services</string>
+    <string name="notify_not_found">Caractéristique de notification introuvable</string>
+    <string name="connecting">Connexion à %1$s…</string>
+
+    <!-- Commandes du boîtier -->
+    <string name="cmd_focus">Mise au point</string>
+    <string name="cmd_compass">Boussole</string>
+    <string name="cmd_photo_video">Bascule Photo/Vidéo</string>
+    <string name="cmd_shutter">Déclencheur</string>
+    <string name="cmd_zoom_in">Zoom avant</string>
+    <string name="cmd_menu">Menu</string>
+    <string name="cmd_zoom_out">Zoom arrière</string>
+    <string name="cmd_flash">Flash</string>
+    <string name="command_label">Commande : %1$s</string>
+    <string name="unknown_frame">Inconnu : %1$s</string>
+
+    <!-- Écran caméra -->
+    <string name="photo">PHOTO</string>
+    <string name="video">VIDÉO</string>
+    <string name="rec">● REC</string>
+    <string name="camera_permission">Autorisation caméra requise</string>
+    <string name="authorize">Autoriser</string>
+    <string name="video_mode">Vidéo</string>
+    <string name="photo_mode">Photo</string>
+    <string name="self_portrait">Autoportrait</string>
+    <string name="video_self_portrait">Vidéo autoportrait</string>
+    <string name="flip">Avant/Arrière</string>
+    <string name="white_balance">Balance des blancs</string>
+    <string name="image_size">Taille image</string>
+    <string name="video_size">Taille vidéo</string>
+    <string name="exposure">Exposition</string>
+    <string name="auto">Auto</string>
+    <string name="large">Grande</string>
+    <string name="small">Petite</string>
+    <string name="wb_auto">Auto</string>
+    <string name="wb_incandescent">Incandescent</string>
+    <string name="wb_fluorescent">Fluorescent</string>
+    <string name="wb_daylight">Jour</string>
+    <string name="wb_cloudy">Nuageux</string>
+
+    <!-- Télémétrie plongée -->
+    <string name="max_depth">Max %1$s</string>
+    <string name="depth_label">Profondeur</string>
+    <string name="dive_time_label">Temps de plongée</string>
+    <string name="stop_label">Palier</string>
+    <string name="next_stop">PALIER %1$s · %2$d min</string>
+    <string name="safety_stop">PALIER 6 m</string>
+    <string name="safety_stop_dash">PALIER —</string>
+    <string name="ndl_label">NDL %1$s</string>
+    <string name="deco_ceiling">PALIER %1$s</string>
+    <string name="tts_label">TTS %1$d min</string>
+    <string name="cns_otu">CNS %1$d%% · OTU %2$d</string>
+    <string name="surface_interval">Intervalle surface %1$s</string>
+    <string name="no_fly_time">Avion dans %1$s</string>
+    <string name="gas">Gaz</string>
+    <string name="o2_nitrox">O2 (Nitrox)</string>
+    <string name="dc_title">Ordinateur de plongée</string>
+    <string name="dc_experimental_option">Option expérimentale</string>
+    <string name="dc_disclaimer">⚠️ FONCTIONNALITÉ EXPÉRIMENTALE — MODE TEST. Ne pas utiliser ce boîtier comme ordinateur de plongée pour planifier ou réaliser des plongées réelles. Les calculs de décompression et de toxicité ne sont pas validés et ne remplacent ni une formation ni un ordinateur de plongée certifié. Utilisation à vos risques et périls.</string>
+    <string name="dc_enable">Activer (mode test)</string>
+    <string name="dc_o2">Oxygène (O₂)</string>
+    <string name="dc_altitude">Altitude</string>
+    <string name="dc_water">Type d\'eau</string>
+    <string name="dc_salt">Salée</string>
+    <string name="dc_fresh">Douce</string>
+
+    <!-- Journal -->
+    <string name="journal_title">Journal de plongée</string>
+    <string name="no_dives">Aucune plongée enregistrée</string>
+    <string name="scuba">SCUBA</string>
+    <string name="free">Free</string>
+    <string name="dive_row">%1$s · %2$s · Max %3$s</string>
+    <string name="avg_min">Moy %1$s · Min %2$s</string>
+    <string name="journal_detail_title">Détail de plongée</string>
+    <string name="dive_not_found">Plongée introuvable</string>
+    <string name="max_depth_label">Profondeur max : %1$s</string>
+    <string name="avg_depth_label">Profondeur moyenne : %1$s</string>
+    <string name="min_temp_label">Température min : %1$s</string>
+    <string name="avg_temp_label">Température moyenne : %1$s</string>
+    <string name="gps_label">GPS : %1$s</string>
+    <string name="journal_altitude">Altitude : %1$d m</string>
+    <string name="journal_water">Eau : %1$s</string>
+    <string name="maps_unavailable">Application de cartes indisponible</string>
+
+    <!-- Réglages -->
+    <string name="settings_title">Réglages de plongée</string>
+    <string name="units">Unités</string>
+    <string name="meters">mètres</string>
+    <string name="feet">pieds (ft)</string>
+    <string name="celsius">°C</string>
+    <string name="fahrenheit">°F</string>
+    <string name="mode">Mode</string>
+    <string name="language">Langue</string>
+    <string name="max_depth_setting">Profondeur max</string>
+    <string name="max_time_setting">Temps max</string>
+    <string name="ascent_rate_setting">Vitesse de remontée</string>
+    <string name="depth_alert">Alerte profondeur %1$d</string>
+    <string name="surface_interval_setting">Intervalle de surface</string>
+    <string name="unit_m">m</string>
+    <string name="unit_min">min</string>
+    <string name="unit_m_min">m/min</string>
+
+    <!-- Boussole -->
+    <string name="compass_title">Boussole</string>
+
+    <!-- Galerie -->
+    <string name="gallery_title">Galerie</string>
+    <string name="no_media">Aucun média</string>
+
+    <!-- Guide -->
+    <string name="guide_title">Guide d\'utilisation</string>
+    <string name="guide_1_title">1. Connexion au boîtier</string>
+    <string name="guide_1_text">Allumez le boîtier, puis sur l\'écran d\'accueil touchez « Scanner » ou touchez directement votre boîtier dans la liste des appareils jumelés.</string>
+    <string name="guide_2_title">2. Caméra</string>
+    <string name="guide_2_text">L\'écran caméra permet de prendre des photos et des vidéos. Les boutons du boîtier pilotent : déclencheur, mise au point, zoom, photo/vidéo, flash et menu.</string>
+    <string name="guide_3_title">3. Réglages caméra</string>
+    <string name="guide_3_text">Le bouton ⚙ (ou le bouton « menu » du boîtier) ouvre les réglages : balance des blancs, taille d\'image, taille vidéo et exposition.</string>
+    <string name="guide_4_title">4. Plongée</string>
+    <string name="guide_4_text">Dès que la profondeur dépasse 1,2 m, une plongée démarre (minuteur, profondeur max). Elle se termine automatiquement en remontant à moins de 0,5 m et est enregistrée dans le journal.</string>
+    <string name="guide_5_title">5. Réglages de plongée</string>
+    <string name="guide_5_text">Choisissez le mode SCUBA ou Free, activez les alertes (profondeur, temps, vitesse de remontée, palier de sécurité) et les unités (mètres/pieds, °C/°F).</string>
+    <string name="guide_6_title">6. Boussole</string>
+    <string name="guide_6_text">La boussole utilise le capteur du téléphone pour indiquer le cap. Elle s\'ouvre via le bouton « Boussole » ou le bouton dédié du boîtier.</string>
+
+    <!-- Correction colorimétrique -->
+    <string name="color_correction_title">Correction colorimétrique</string>
+    <string name="choose_photo_hint">Choisissez une photo sous-marine à corriger.</string>
+    <string name="choose_photo">Choisir une photo</string>
+    <string name="red_correction">Correction rouge : %1$d %%</string>
+    <string name="other_photo">Autre photo</string>
+    <string name="save">Enregistrer</string>
+
+    <!-- Alertes de plongée -->
+    <string name="alert_safety_stop">Sécurité : palier engagé (6 m)</string>
+    <string name="alert_depth_reached">Profondeur %1$d m atteinte</string>
+    <string name="alert_time_reached">Temps de plongée %1$d min</string>
+    <string name="alert_ascent_rate">Remontée trop rapide (%1$d m/min)</string>
+    <string name="alert_surface_interval">Intervalle de surface : %1$d min écoulées</string>
+
+    <!-- Messages caméra -->
+    <string name="photo_saved">Photo enregistrée</string>
+    <string name="video_saved">Vidéo enregistrée</string>
+    <string name="photo_error">Erreur photo : %1$s</string>
+    <string name="video_error">Erreur vidéo : %1$s</string>
+    <string name="video_unavailable">Mode vidéo indisponible</string>
+    <string name="qualities_unavailable">Qualités vidéo non disponibles</string>
+    <string name="exposure_unsupported">Exposition non supportée</string>
+
+    <!-- Service d\'avant-plan -->
+    <string name="service_channel">Suivi de plongée</string>
+    <string name="service_tracking">Suivi de plongée actif</string>
+    <string name="service_diving">Plongée en cours · %1$s · %2$d %%</string>
+    <string name="service_surface">En surface · %1$s · %2$d %%</string>
+</resources>
