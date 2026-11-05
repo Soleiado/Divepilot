@@ -75,6 +75,11 @@
     <string name="wb_fluorescent">Fluorescent</string>
     <string name="wb_daylight">Jour</string>
     <string name="wb_cloudy">Nuageux</string>
+    <string name="wb_manual">Manuel</string>
+    <string name="wb_auto_depth">Auto prof. (test)</string>
+    <string name="red">Rouge</string>
+    <string name="green">Vert</string>
+    <string name="blue">Bleu</string>
 
     <!-- Télémétrie plongée -->
     <string name="max_depth">Max %1$s</string>

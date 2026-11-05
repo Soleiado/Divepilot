@@ -3,12 +3,14 @@ package com.divepilot.app.camera
 import android.content.ContentValues
 import android.content.Context
 import android.hardware.camera2.CaptureRequest
+import android.hardware.camera2.params.RggbChannelVector
 import android.media.MediaScannerConnection
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
-import androidx.camera.camera2.interop.Camera2Interop
+import androidx.camera.camera2.interop.Camera2CameraControl
+import androidx.camera.camera2.interop.CaptureRequestOptions
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.FocusMeteringAction
@@ -51,6 +53,9 @@ data class CameraUiState(
     val imageSizeLabel: String = "Grande",
     val videoQualityLabel: String = "",
     val exposureIndex: Int = 0,
+    val redGain: Int = 100,
+    val greenGain: Int = 100,
+    val blueGain: Int = 100,
     val lastEvent: String? = null,
 )
 
@@ -72,6 +77,8 @@ class CameraController(private val context: Context) {
         R.string.wb_fluorescent to CaptureRequest.CONTROL_AWB_MODE_FLUORESCENT,
         R.string.wb_daylight to CaptureRequest.CONTROL_AWB_MODE_DAYLIGHT,
         R.string.wb_cloudy to CaptureRequest.CONTROL_AWB_MODE_CLOUDY_DAYLIGHT,
+        R.string.wb_manual to CaptureRequest.CONTROL_AWB_MODE_OFF,      // Manuel (gains RVB)
+        R.string.wb_auto_depth to CaptureRequest.CONTROL_AWB_MODE_OFF,  // Auto profondeur (test)
     )
     private var supportedQualities = listOf<Quality>()
 
@@ -89,6 +96,10 @@ class CameraController(private val context: Context) {
 
     private var mode = CameraMode.PHOTO
 
+    // Pour le mode « Auto profondeur » (expérimental).
+    private var lastDepthMeters = 0.0
+    private var lastAutoRedPercent = -1
+
     private fun isVideoMode() = mode == CameraMode.VIDEO || mode == CameraMode.VIDEO_SELFIE
     private fun isFrontCamera() = mode == CameraMode.SELFIE || mode == CameraMode.VIDEO_SELFIE
 
@@ -97,6 +108,9 @@ class CameraController(private val context: Context) {
             whiteBalanceLabel = context.getString(whiteBalanceModes[cameraSettings.whiteBalance].first),
             imageSizeLabel = context.getString(if (cameraSettings.imageSize == 0) R.string.large else R.string.small),
             exposureIndex = cameraSettings.exposureIndex,
+            redGain = cameraSettings.redGain,
+            greenGain = cameraSettings.greenGain,
+            blueGain = cameraSettings.blueGain,
         )
     )
     val state: StateFlow<CameraUiState> = _state.asStateFlow()
@@ -163,6 +177,7 @@ class CameraController(private val context: Context) {
             _state.update { it.copy(videoQualityLabel = label) }
         }
         applyExposure()
+        applyColorBalance()
     }
 
     fun cycleMode() {
@@ -198,7 +213,7 @@ class CameraController(private val context: Context) {
         )
         settingsRepository.save(cameraSettings)
         _state.update { it.copy(whiteBalanceLabel = context.getString(whiteBalanceModes[cameraSettings.whiteBalance].first)) }
-        if (!isVideoMode()) bindUseCases()
+        applyColorBalance()
     }
 
     fun cycleImageSize() {
@@ -235,6 +250,88 @@ class CameraController(private val context: Context) {
         settingsRepository.save(cameraSettings)
         cam.cameraControl.setExposureCompensationIndex(index)
         _state.update { it.copy(exposureIndex = index) }
+    }
+
+    fun adjustRedGain(delta: Int) {
+        cameraSettings = cameraSettings.copy(redGain = (cameraSettings.redGain + delta).coerceIn(GAIN_MIN, GAIN_MAX))
+        settingsRepository.save(cameraSettings)
+        _state.update { it.copy(redGain = cameraSettings.redGain) }
+        if (cameraSettings.whiteBalance == MANUAL_WB_INDEX) applyColorBalance()
+    }
+
+    fun adjustGreenGain(delta: Int) {
+        cameraSettings = cameraSettings.copy(greenGain = (cameraSettings.greenGain + delta).coerceIn(GAIN_MIN, GAIN_MAX))
+        settingsRepository.save(cameraSettings)
+        _state.update { it.copy(greenGain = cameraSettings.greenGain) }
+        if (cameraSettings.whiteBalance == MANUAL_WB_INDEX) applyColorBalance()
+    }
+
+    fun adjustBlueGain(delta: Int) {
+        cameraSettings = cameraSettings.copy(blueGain = (cameraSettings.blueGain + delta).coerceIn(GAIN_MIN, GAIN_MAX))
+        settingsRepository.save(cameraSettings)
+        _state.update { it.copy(blueGain = cameraSettings.blueGain) }
+        if (cameraSettings.whiteBalance == MANUAL_WB_INDEX) applyColorBalance()
+    }
+
+    /** Met à jour la profondeur pour le mode « Auto profondeur » (expérimental). */
+    fun setAutoColorDepth(depthMeters: Double) {
+        lastDepthMeters = depthMeters
+        if (cameraSettings.whiteBalance != AUTO_DEPTH_WB_INDEX) return
+        val percent = (100 * (1.0 + depthMeters * AUTO_DEPTH_FACTOR)).toInt().coerceIn(100, GAIN_MAX)
+        if (percent != lastAutoRedPercent) {
+            lastAutoRedPercent = percent
+            _state.update { it.copy(redGain = percent) }
+            applyColorBalance()
+        }
+    }
+
+    /** Applique la balance des couleurs (AWB ou gains RVB) à tous les cas d'usage, en direct. */
+    private fun applyColorBalance() {
+        val cam = camera ?: return
+        try {
+            val control = Camera2CameraControl.from(cam.cameraControl)
+            val builder = CaptureRequestOptions.Builder()
+            if (cameraSettings.whiteBalance >= MANUAL_WB_INDEX) {
+                builder.setCaptureRequestOption(
+                    CaptureRequest.CONTROL_AWB_MODE,
+                    CaptureRequest.CONTROL_AWB_MODE_OFF,
+                )
+                builder.setCaptureRequestOption(
+                    CaptureRequest.COLOR_CORRECTION_MODE,
+                    CaptureRequest.COLOR_CORRECTION_MODE_TRANSFORM_MATRIX,
+                )
+                val (r, g, b) = currentGains()
+                builder.setCaptureRequestOption(
+                    CaptureRequest.COLOR_CORRECTION_GAINS,
+                    RggbChannelVector(r, g, g, b),
+                )
+            } else {
+                builder.setCaptureRequestOption(
+                    CaptureRequest.CONTROL_AWB_MODE,
+                    whiteBalanceModes[cameraSettings.whiteBalance].second,
+                )
+                builder.setCaptureRequestOption(
+                    CaptureRequest.COLOR_CORRECTION_MODE,
+                    CaptureRequest.COLOR_CORRECTION_MODE_HIGH_QUALITY,
+                )
+            }
+            control.addCaptureRequestOptions(builder.build())
+        } catch (e: Exception) {
+            Log.e(TAG, "Balance des couleurs non appliquée", e)
+        }
+    }
+
+    private fun currentGains(): Triple<Float, Float, Float> {
+        return if (cameraSettings.whiteBalance == AUTO_DEPTH_WB_INDEX) {
+            val r = (1.0 + lastDepthMeters * AUTO_DEPTH_FACTOR).toFloat().coerceIn(1.0f, 2.0f)
+            Triple(r, 1.0f, 1.0f)
+        } else {
+            Triple(
+                cameraSettings.redGain / 100f,
+                cameraSettings.greenGain / 100f,
+                cameraSettings.blueGain / 100f,
+            )
+        }
     }
 
     fun zoomBy(delta: Float) {
@@ -352,16 +449,12 @@ class CameraController(private val context: Context) {
     }
 
     private fun buildImageCapture(): ImageCapture {
-        val builder = ImageCapture.Builder()
+        return ImageCapture.Builder()
             .setCaptureMode(
                 if (cameraSettings.imageSize == 0) ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY
                 else ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY
             )
-        Camera2Interop.Extender(builder).setCaptureRequestOption(
-            CaptureRequest.CONTROL_AWB_MODE,
-            whiteBalanceModes[cameraSettings.whiteBalance].second,
-        )
-        return builder.build()
+            .build()
     }
 
     private fun videoQualitySelector(): QualitySelector {
@@ -402,5 +495,10 @@ class CameraController(private val context: Context) {
 
     private companion object {
         const val TAG = "CameraController"
+        const val MANUAL_WB_INDEX = 5
+        const val AUTO_DEPTH_WB_INDEX = 6
+        const val GAIN_MIN = 50
+        const val GAIN_MAX = 200
+        const val AUTO_DEPTH_FACTOR = 0.04 // +4 % de rouge par mètre
     }
 }

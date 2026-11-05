@@ -38,7 +38,11 @@ class CameraViewModel(application: Application) : AndroidViewModel(application) 
     init {
         viewModelScope.launch {
             bleManager.frames.collect { frame ->
-                if (frame is DecodedFrame.Command) onCommand(frame.command)
+                when (frame) {
+                    is DecodedFrame.Command -> onCommand(frame.command)
+                    is DecodedFrame.Telemetry -> controller.setAutoColorDepth(frame.depthMeters)
+                    else -> Unit
+                }
             }
         }
     }
@@ -97,6 +101,9 @@ class CameraViewModel(application: Application) : AndroidViewModel(application) 
             1 -> controller.cycleImageSize()
             2 -> controller.cycleVideoQuality(direction)
             3 -> controller.adjustExposure(direction)
+            4 -> controller.adjustRedGain(direction * 5)
+            5 -> controller.adjustGreenGain(direction * 5)
+            6 -> controller.adjustBlueGain(direction * 5)
         }
     }
 
@@ -104,6 +111,9 @@ class CameraViewModel(application: Application) : AndroidViewModel(application) 
     fun cycleImageSize() = controller.cycleImageSize()
     fun cycleVideoQuality() = controller.cycleVideoQuality()
     fun adjustExposure(delta: Int) = controller.adjustExposure(delta)
+    fun adjustRedGain(delta: Int) = controller.adjustRedGain(delta)
+    fun adjustGreenGain(delta: Int) = controller.adjustGreenGain(delta)
+    fun adjustBlueGain(delta: Int) = controller.adjustBlueGain(delta)
 
     private fun onCommand(command: BleCommand) {
         when (command) {
@@ -136,7 +146,7 @@ class CameraViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     companion object {
-        const val OPTION_COUNT = 5
-        const val COMPASS_INDEX = 4
+        const val OPTION_COUNT = 8
+        const val COMPASS_INDEX = 7
     }
 }

@@ -71,6 +71,11 @@
     <string name="wb_fluorescent">Fluorescent</string>
     <string name="wb_daylight">Daylight</string>
     <string name="wb_cloudy">Cloudy</string>
+    <string name="wb_manual">Manual</string>
+    <string name="wb_auto_depth">Auto depth (test)</string>
+    <string name="red">Red</string>
+    <string name="green">Green</string>
+    <string name="blue">Blue</string>
 
     <string name="max_depth">Max %1$s</string>
     <string name="depth_label">Depth</string>

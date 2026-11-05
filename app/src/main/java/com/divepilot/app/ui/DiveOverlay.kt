@@ -23,6 +23,7 @@ import com.divepilot.app.R
 import com.divepilot.app.dive.DiveState
 import com.divepilot.app.dive.DiveUiState
 import com.divepilot.app.dive.UnitManager
+import com.divepilot.app.dive.displayDepthMeters
 
 /** Panneau de télémétrie affiché en haut à gauche sur la caméra. */
 @Composable
@@ -44,13 +45,13 @@ fun DiveOverlay(state: DiveUiState, modifier: Modifier = Modifier) {
             )
             Row(verticalAlignment = Alignment.Bottom) {
                 Text(
-                    formatDepth(state.currentDepthMeters, units.depthUnit),
+                    formatDepth(displayDepthMeters(state.currentDepthMeters, state.freshWater), units.depthUnit),
                     color = Color.White,
                     style = MaterialTheme.typography.headlineLarge,
                 )
                 Spacer(Modifier.width(10.dp))
                 Text(
-                    formatDepth(state.maxDepthMeters, units.depthUnit),
+                    formatDepth(displayDepthMeters(state.maxDepthMeters, state.freshWater), units.depthUnit),
                     color = Color.Red,
                     style = MaterialTheme.typography.headlineLarge,
                 )
@@ -89,12 +90,12 @@ fun DiveOverlay(state: DiveUiState, modifier: Modifier = Modifier) {
                 )
                 val (stopDepthText, stopTimeText, stopColor) = when {
                     state.ceilingMeters > 0.0 -> Triple(
-                        formatDepth(state.firstStopMeters, units.depthUnit),
+                        formatDepth(displayDepthMeters(state.firstStopMeters, state.freshWater), units.depthUnit),
                         formatMinutesAsTime(state.firstStopMinutes),
                         Color.Red,
                     )
                     state.staySafeState == 1 || state.staySafeState == 2 -> Triple(
-                        formatDepth(6.0, units.depthUnit),
+                        formatDepth(displayDepthMeters(6.0, state.freshWater), units.depthUnit),
                         formatMinutesAsTime(3),
                         Color.Green,
                     )

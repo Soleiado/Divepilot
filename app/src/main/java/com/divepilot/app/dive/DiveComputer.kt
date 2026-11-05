@@ -34,6 +34,7 @@ data class DiveUiState(
     val otu: Double = 0.0,
     val noFlyMinutes: Double = 0.0,
     val dcEnabled: Boolean = false,
+    val freshWater: Boolean = false,
 )
 
 /** Événements émis par la machine à états (alertes, fin de plongée, intervalle de surface). */
@@ -59,7 +60,10 @@ class DiveComputer(
     private val decompressionModel = DecompressionModel(
         getFo2 = { getDcSettings().o2Percent / 100.0 },
         getSurfacePressure = { surfacePressureForAltitude(getDcSettings().altitudeMeters) },
-        getWaterDensity = { waterDensityMetersPerBar(getDcSettings().freshWater) },
+        // Le boîtier convertit la pression en profondeur en supposant l'eau salée
+        // (10,0 m/bar). Le modèle utilise donc cette même densité pour reconstruire
+        // la pression exacte — indépendamment du type d'eau réel (corrigé à l'affichage).
+        getWaterDensity = { HOUSING_WATER_DENSITY },
     )
 
     private val _events = MutableSharedFlow<DiveEvent>(extraBufferCapacity = 16)
@@ -170,6 +174,7 @@ class DiveComputer(
             otu = if (dcEnabled) decompressionModel.otu() else 0.0,
             noFlyMinutes = if (dcEnabled) decompressionModel.noFlyMinutes() else 0.0,
             dcEnabled = dcEnabled,
+            freshWater = dcSettings.freshWater,
         )
     }
 

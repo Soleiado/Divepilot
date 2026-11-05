@@ -36,6 +36,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.divepilot.app.data.DepthSample
 import com.divepilot.app.dive.UnitManager
+import com.divepilot.app.dive.displayDepthMeters
 import androidx.compose.ui.res.stringResource
 import com.divepilot.app.R
 
@@ -71,8 +72,8 @@ fun JournalDetailScreen(logId: Long, onBack: () -> Unit) {
                         formatDuration(log.durationSeconds * 1000),
                     style = MaterialTheme.typography.bodyMedium,
                 )
-                Text(stringResource(R.string.max_depth_label, formatDepth(log.maxDepthMeters, units.depthUnit)))
-                Text(stringResource(R.string.avg_depth_label, formatDepth(log.avgDepthMeters, units.depthUnit)))
+                Text(stringResource(R.string.max_depth_label, formatDepth(displayDepthMeters(log.maxDepthMeters, log.freshWater), units.depthUnit)))
+                Text(stringResource(R.string.avg_depth_label, formatDepth(displayDepthMeters(log.avgDepthMeters, log.freshWater), units.depthUnit)))
                 Text(stringResource(R.string.min_temp_label, formatTemp(log.minTemperature, units.tempUnit)))
                 Text(stringResource(R.string.avg_temp_label, formatTemp(log.avgTemperature, units.tempUnit)))
                 val lat = log.latitude
@@ -98,24 +99,24 @@ fun JournalDetailScreen(logId: Long, onBack: () -> Unit) {
                     style = MaterialTheme.typography.bodyMedium,
                 )
                 Spacer(Modifier.height(16.dp))
-                DepthChart(log.samples, Modifier.fillMaxWidth().height(200.dp))
+                DepthChart(log.samples, log.freshWater, Modifier.fillMaxWidth().height(200.dp))
             }
         }
     }
 }
 
 @Composable
-private fun DepthChart(samples: List<DepthSample>, modifier: Modifier) {
+private fun DepthChart(samples: List<DepthSample>, freshWater: Boolean, modifier: Modifier) {
     Canvas(modifier) {
         if (samples.size < 2) return@Canvas
-        val maxDepth = maxOf(samples.maxOf { it.depthMeters }, 0.5).toFloat()
+        val maxDepth = maxOf(samples.maxOf { displayDepthMeters(it.depthMeters, freshWater) }, 0.5).toFloat()
         val maxTime = samples.maxOf { it.timeSeconds }.coerceAtLeast(1L).toFloat()
         val stepX = size.width / maxTime
         val stepY = size.height / maxDepth
         val path = Path()
         samples.forEachIndexed { i, s ->
             val x = s.timeSeconds * stepX
-            val y = size.height - s.depthMeters.toFloat() * stepY
+            val y = size.height - displayDepthMeters(s.depthMeters, freshWater).toFloat() * stepY
             if (i == 0) path.moveTo(x, y) else path.lineTo(x, y)
         }
         drawPath(path, color = Color(0xFF4DD0E1), style = Stroke(width = 4f))

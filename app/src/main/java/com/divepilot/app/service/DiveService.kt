@@ -15,6 +15,7 @@ import com.divepilot.app.R
 import com.divepilot.app.dive.DiveComputerManager
 import com.divepilot.app.dive.DiveState
 import com.divepilot.app.dive.UnitManager
+import com.divepilot.app.dive.displayDepthMeters
 import com.divepilot.app.ui.formatDepth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -40,7 +41,7 @@ class DiveService : Service() {
         scope.launch {
             DiveComputerManager.get(this@DiveService).uiState.collect { state ->
                 val depthUnit = UnitManager.get(this@DiveService).settings.value.depthUnit
-                val depth = formatDepth(state.currentDepthMeters, depthUnit)
+                val depth = formatDepth(displayDepthMeters(state.currentDepthMeters, state.freshWater), depthUnit)
                 val text = if (state.diveState == DiveState.START) {
                     getString(R.string.service_diving, depth, state.batteryPercent)
                 } else {

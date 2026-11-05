@@ -69,3 +69,13 @@ fun surfacePressureForAltitude(altitudeMeters: Int): Double =
 
 /** Densité de l'eau (m/bar) : 10,0 (salée) ou 10,3 (douce). */
 fun waterDensityMetersPerBar(freshWater: Boolean): Double = if (freshWater) 10.3 else 10.0
+
+/** Densité supposée par le firmware du boîtier pour convertir pression → profondeur (10,0 m/bar). */
+const val HOUSING_WATER_DENSITY = 10.0
+
+/**
+ * Profondeur affichée : le boîtier calcule la profondeur en supposant l'eau salée
+ * (10,0 m/bar). En eau douce, on corrige l'affichage d'environ 3 % (10,3/10,0).
+ */
+fun displayDepthMeters(rawMeters: Double, freshWater: Boolean): Double =
+    rawMeters * (waterDensityMetersPerBar(freshWater) / HOUSING_WATER_DENSITY)

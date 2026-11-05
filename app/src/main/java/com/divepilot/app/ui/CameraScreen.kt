@@ -21,6 +21,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -210,6 +214,9 @@ fun CameraScreen(onBack: () -> Unit, onOpenCompass: () -> Unit) {
                 onCycleImageSize = { viewModel.cycleImageSize() },
                 onCycleVideoQuality = { viewModel.cycleVideoQuality() },
                 onExposure = { viewModel.adjustExposure(it) },
+                onAdjustRed = { viewModel.adjustRedGain(it) },
+                onAdjustGreen = { viewModel.adjustGreenGain(it) },
+                onAdjustBlue = { viewModel.adjustBlueGain(it) },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .widthIn(max = 360.dp)
@@ -229,50 +236,141 @@ private fun CameraSettingsPanel(
     onCycleImageSize: () -> Unit,
     onCycleVideoQuality: () -> Unit,
     onExposure: (Int) -> Unit,
+    onAdjustRed: (Int) -> Unit,
+    onAdjustGreen: (Int) -> Unit,
+    onAdjustBlue: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val listState = rememberLazyListState()
+    LaunchedEffect(selectedIndex) {
+        listState.animateScrollToItem(selectedIndex)
+    }
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(12.dp),
         color = Color.Black.copy(alpha = 0.78f),
     ) {
-        Column(Modifier.padding(horizontal = 12.dp, vertical = 8.dp)) {
-            OptionRow(
-                stringResource(R.string.white_balance),
-                state.whiteBalanceLabel,
-                selected = selectedIndex == 0,
-                editing = editing && selectedIndex == 0,
-                onClick = { onSelect(0); onCycleWhiteBalance() },
-            )
-            OptionRow(
-                stringResource(R.string.image_size),
-                state.imageSizeLabel,
-                selected = selectedIndex == 1,
-                editing = editing && selectedIndex == 1,
-                onClick = { onSelect(1); onCycleImageSize() },
-            )
-            OptionRow(
-                stringResource(R.string.video_size),
-                state.videoQualityLabel.ifEmpty { stringResource(R.string.auto) },
-                selected = selectedIndex == 2,
-                editing = editing && selectedIndex == 2,
-                onClick = { onSelect(2); onCycleVideoQuality() },
-            )
-            ExposureRow(
-                state.exposureIndex,
-                selected = selectedIndex == 3,
-                editing = editing && selectedIndex == 3,
-                onSelect = { onSelect(3) },
-                onExposure = onExposure,
-            )
+        LazyColumn(
+            state = listState,
+            modifier = Modifier.heightIn(max = 280.dp),
+            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+        ) {
+            item {
+                OptionRow(
+                    stringResource(R.string.white_balance),
+                    state.whiteBalanceLabel,
+                    selected = selectedIndex == 0,
+                    editing = editing && selectedIndex == 0,
+                    onClick = { onSelect(0); onCycleWhiteBalance() },
+                )
+            }
+            item {
+                OptionRow(
+                    stringResource(R.string.image_size),
+                    state.imageSizeLabel,
+                    selected = selectedIndex == 1,
+                    editing = editing && selectedIndex == 1,
+                    onClick = { onSelect(1); onCycleImageSize() },
+                )
+            }
+            item {
+                OptionRow(
+                    stringResource(R.string.video_size),
+                    state.videoQualityLabel.ifEmpty { stringResource(R.string.auto) },
+                    selected = selectedIndex == 2,
+                    editing = editing && selectedIndex == 2,
+                    onClick = { onSelect(2); onCycleVideoQuality() },
+                )
+            }
+            item {
+                ExposureRow(
+                    state.exposureIndex,
+                    selected = selectedIndex == 3,
+                    editing = editing && selectedIndex == 3,
+                    onSelect = { onSelect(3) },
+                    onExposure = onExposure,
+                )
+            }
+            // Gains RVB (balance des couleurs manuelle).
+            item {
+                GainRow(
+                    stringResource(R.string.red),
+                    state.redGain,
+                    selected = selectedIndex == 4,
+                    editing = editing && selectedIndex == 4,
+                    onSelect = { onSelect(4) },
+                    onAdjust = onAdjustRed,
+                )
+            }
+            item {
+                GainRow(
+                    stringResource(R.string.green),
+                    state.greenGain,
+                    selected = selectedIndex == 5,
+                    editing = editing && selectedIndex == 5,
+                    onSelect = { onSelect(5) },
+                    onAdjust = onAdjustGreen,
+                )
+            }
+            item {
+                GainRow(
+                    stringResource(R.string.blue),
+                    state.blueGain,
+                    selected = selectedIndex == 6,
+                    editing = editing && selectedIndex == 6,
+                    onSelect = { onSelect(6) },
+                    onAdjust = onAdjustBlue,
+                )
+            }
             // Boussole (action : activée par le déclencheur).
-            OptionRow(
-                stringResource(R.string.compass),
-                "▶",
-                selected = selectedIndex == 4,
-                editing = false,
-                onClick = { onSelect(4) },
+            item {
+                OptionRow(
+                    stringResource(R.string.compass),
+                    "▶",
+                    selected = selectedIndex == 7,
+                    editing = false,
+                    onClick = { onSelect(7) },
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun GainRow(
+    label: String,
+    value: Int,
+    selected: Boolean,
+    editing: Boolean,
+    onSelect: () -> Unit,
+    onAdjust: (Int) -> Unit,
+) {
+    val bg = when {
+        editing -> Color(0xFF4DD0E1).copy(alpha = 0.40f)
+        selected -> Color(0xFF4DD0E1).copy(alpha = 0.18f)
+        else -> Color.Transparent
+    }
+    Surface(onClick = onSelect, color = bg, modifier = Modifier.fillMaxWidth()) {
+        Row(
+            Modifier.padding(horizontal = 12.dp, vertical = 2.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                label,
+                color = Color.White,
+                fontSize = 14.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f),
             )
+            TextButton(onClick = { onAdjust(-5) }) { Text("−", color = Color.White, fontSize = 14.sp) }
+            Text(
+                "$value %",
+                color = if (editing) Color(0xFF4DD0E1) else Color.White,
+                fontSize = 14.sp,
+                maxLines = 1,
+            )
+            TextButton(onClick = { onAdjust(+5) }) { Text("+", color = Color.White, fontSize = 14.sp) }
         }
     }
 }

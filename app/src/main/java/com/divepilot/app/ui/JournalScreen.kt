@@ -23,6 +23,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.divepilot.app.R
 import com.divepilot.app.data.DiveLog
 import com.divepilot.app.dive.UnitManager
+import com.divepilot.app.dive.displayDepthMeters
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 
@@ -63,14 +64,14 @@ private fun DiveLogRow(log: DiveLog, onClick: () -> Unit) {
                     R.string.dive_row,
                     mode,
                     formatDuration(log.durationSeconds * 1000),
-                    formatDepth(log.maxDepthMeters, units.depthUnit),
+                    formatDepth(displayDepthMeters(log.maxDepthMeters, log.freshWater), units.depthUnit),
                 ),
                 style = MaterialTheme.typography.bodyMedium,
             )
             Text(
                 stringResource(
                     R.string.avg_min,
-                    formatDepth(log.avgDepthMeters, units.depthUnit),
+                    formatDepth(displayDepthMeters(log.avgDepthMeters, log.freshWater), units.depthUnit),
                     formatTemp(log.minTemperature, units.tempUnit),
                 ),
                 style = MaterialTheme.typography.bodySmall,
